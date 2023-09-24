@@ -52,6 +52,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
+                                // Swagger 관련 요청은 허용
+                                "/swagger-ui/**", "/api-docs/**",
                                 "/test"
                         )
                         .permitAll()
