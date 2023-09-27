@@ -1,16 +1,21 @@
-package com.cjw.smarthomesync.auth.domain;
+package com.cjw.smarthomesync.auth.domain.request;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 
 @Data
-public class AuthDTO implements UserDetails {
+public class AuthDto implements UserDetails {
     private Long uid;
-    private String id;
+    private String email;
     private String password;
+    private String name;
+    private String refreshToken;
+    private String salt;
+    private Timestamp createdAt;
 
     // 이하 코드는 security 를 위한 용도
     protected String role;
@@ -29,7 +34,7 @@ public class AuthDTO implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.id;
+        return this.email;
     }
 
     @Override

@@ -1,17 +1,18 @@
 package com.cjw.smarthomesync.auth.mapper;
 
-import com.cjw.smarthomesync.auth.domain.AuthDTO;
+import com.cjw.smarthomesync.auth.domain.request.AuthDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
 @Mapper
 public interface AuthMapper {
-    Optional<AuthDTO> findUserByEmail(String email) throws Exception;
+    Optional<AuthDto> findAccountByUid(Long uid);
 
-    Optional<AuthDTO> findUserByUserId(String id) throws Exception;
+    Optional<AuthDto> findAccountByEmail(String email);
 
-    Optional<AuthDTO> findUserByUid(Long uid);
+    void setSalt(@Param(value = "uid") Long uid, @Param(value = "salt") String salt) throws Exception;
 
-    Optional<AuthDTO> findUserById(String id) throws Exception;
+    void signup(AuthDto authDto) throws Exception;
 }

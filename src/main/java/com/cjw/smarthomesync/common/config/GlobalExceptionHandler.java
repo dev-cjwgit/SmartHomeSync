@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<?> handler(Throwable t) {
-        log.error(t.getMessage());
+        log.error(t.getCause().toString());
 
         return new ResponseEntity<Object>(new HashMap<String, Object>() {{
             put("result", false);
