@@ -50,7 +50,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expire)) // 토큰 만료일 설정
-                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화
+                .signWith(SignatureAlgorithm.HS256, (secretKey + authMapper.getSalt(uid)).getBytes()) // 암호화
                 .compact();
     }
 
@@ -75,7 +75,7 @@ public class JwtTokenProvider {
     // 유저 이름 추출
     public String getUserId(String token) {
         return Jwts.parser()
-                .setSigningKey((secretKey).getBytes())
+                .setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -96,7 +96,7 @@ public class JwtTokenProvider {
     // JWT 토큰 유효성 체크
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SecurityException | MalformedJwtException | IllegalArgumentException | ExpiredJwtException |
@@ -107,7 +107,7 @@ public class JwtTokenProvider {
         return false;
     }
 
-    private Long getUid(String token) throws RuntimeException {
+    private Long getUid(String token) {
         try {
             if (token.chars().filter(c -> c == '.').count() != 2)
                 throw new BaseException(ErrorMessage.ACCESS_TOKEN_INVALID);

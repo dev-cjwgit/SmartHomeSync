@@ -15,8 +15,13 @@ public enum ErrorMessage {
     ACCESS_TOKEN_INVALID_PAYLOADS(1012, "토큰 정보가 손상되었습니다.", HttpStatus.UNAUTHORIZED),
     ACCESS_TOKEN_INVALID_SIGNATURE(1013, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED),
     ACCESS_TOKEN_EMPTY(1014, "토큰이 입력되지 않았습니다.", HttpStatus.BAD_REQUEST),
-    UNDEFINED_EXCEPTION(0, "정의 되지 않은 오류 입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-    EXIST_EMAIL(2000, "이미 존재하는 이메일입니다.", HttpStatus.BAD_REQUEST);
+    EXIST_EMAIL(2000, "이미 존재 하는 이메일입니다.", HttpStatus.BAD_REQUEST),
+    NOT_EXIST_EMAIL(2001, "이미 존재 하지 않는 이메일입니다.", HttpStatus.BAD_REQUEST),
+    NOT_MATCH_PASSWORD(2002, "비밀번호가 틀렸습니다.", HttpStatus.BAD_REQUEST),
+
+
+    UNDEFINED_EXCEPTION(0, "정의 되지 않은 오류 입니다.", HttpStatus.INTERNAL_SERVER_ERROR)
+    ;
 
     private final Integer code;
     private final String message;

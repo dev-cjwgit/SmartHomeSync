@@ -24,6 +24,7 @@
     <select id="findAccountByEmail" parameterType="string" resultType="AuthDto">
         SELECT `uid`,
                `email`,
+               `password`,
                `name`,
                `role`
         FROM account
@@ -34,5 +35,17 @@
         UPDATE account
         SET `salt` = #{salt}
         WHERE `uid` = #{uid}
+    </update>
+
+    <select id="getSalt" parameterType="long" resultType="string">
+        SELECT `salt`
+        FROM account
+        WHERE uid = #{uid};
+    </select>
+
+    <update id="setRefreshToken" parameterType="AuthDto">
+        UPDATE account
+        SET `refresh_token` = #{refreshToken}
+        WHERE `uid` = #{uid};
     </update>
 </mapper>

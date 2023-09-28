@@ -12,7 +12,11 @@ public interface AuthMapper {
 
     Optional<AuthDto> findAccountByEmail(String email);
 
-    void setSalt(@Param(value = "uid") Long uid, @Param(value = "salt") String salt) throws Exception;
+    void setSalt(@Param(value = "uid") Long uid, @Param(value = "salt") String salt);
 
-    void signup(AuthDto authDto) throws Exception;
+    String getSalt(Long uid);
+
+    void setRefreshToken(AuthDto authDto);
+
+    void signup(AuthDto authDto);
 }
