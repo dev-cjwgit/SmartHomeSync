@@ -96,7 +96,9 @@ public class JwtTokenProvider {
     // JWT 토큰 유효성 체크
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8))
+                    .build().parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SecurityException | MalformedJwtException | IllegalArgumentException | ExpiredJwtException |
