@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,5 +77,23 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public String refreshToken(Long uid, String token) {
+        Optional<AuthDto> object = authMapper.findAccountByUid(uid);
+        if (object.isPresent()) {
+            AuthDto authDto = object.get();
+            if (token.equals(authDto.getRefreshToken())) {
+                if (jwtTokenProvider.validateToken(token))
+                    return jwtTokenProvider.createToken(authDto.getUid(), Collections.singletonList(authDto.getRole()));
+                else
+                    throw new BaseException(ErrorMessage.ACCESS_TOKEN_EXPIRE);
+            } else {
+                throw new BaseException(ErrorMessage.REFRESH_TOKEN_NOT_MATCH);
+            }
+        } else {
+            throw new BaseException(ErrorMessage.NOT_USER_INFO);
+        }
     }
 }

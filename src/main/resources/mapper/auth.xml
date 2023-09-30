@@ -16,6 +16,7 @@
         SELECT `uid`,
                `email`,
                `name`,
+               `refresh_token` as refreshToken,
                `role`
         FROM account
         WHERE `uid` = #{uid}

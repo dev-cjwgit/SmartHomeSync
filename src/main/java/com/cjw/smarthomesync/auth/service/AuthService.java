@@ -8,4 +8,6 @@ public interface AuthService {
     void signup(AuthDto authDto);
 
     JwtTokenVo login(LoginVo loginDto);
+
+    String refreshToken(Long uid, String token);
 }

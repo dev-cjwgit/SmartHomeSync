@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 // Swagger 관련 요청은 허용
                                 "/swagger-ui/**", "/api-docs/**",
-                                "/signup", "/login",
+                                "/auth/signup", "/auth/login", "/auth/refresh",
                                 "/test"
                         )
                         .permitAll()
