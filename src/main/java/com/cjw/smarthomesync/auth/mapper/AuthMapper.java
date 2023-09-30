@@ -1,6 +1,7 @@
 package com.cjw.smarthomesync.auth.mapper;
 
-import com.cjw.smarthomesync.auth.domain.request.AuthDto;
+import com.cjw.smarthomesync.auth.domain.request.SignupVo;
+import com.cjw.smarthomesync.common.domain.AuthEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,9 +9,9 @@ import java.util.Optional;
 
 @Mapper
 public interface AuthMapper {
-    Optional<AuthDto> findAccountByUid(Long uid);
+    Optional<AuthEntity> findAccountByUid(Long uid);
 
-    Optional<AuthDto> findAccountByEmail(String email);
+    Optional<AuthEntity> findAccountByEmail(String email);
 
     void setSalt(@Param(value = "uid") Long uid, @Param(value = "salt") String salt);
 
@@ -20,5 +21,5 @@ public interface AuthMapper {
 
     String getRefreshToken(@Param("uid") Long uid);
 
-    void signup(AuthDto authDto);
+    void signup(SignupVo signupVo);
 }

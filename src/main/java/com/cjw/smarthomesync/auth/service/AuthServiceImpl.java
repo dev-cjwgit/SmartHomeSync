@@ -1,6 +1,7 @@
 package com.cjw.smarthomesync.auth.service;
 
-import com.cjw.smarthomesync.auth.domain.request.AuthDto;
+import com.cjw.smarthomesync.auth.domain.request.SignupVo;
+import com.cjw.smarthomesync.common.domain.AuthEntity;
 import com.cjw.smarthomesync.auth.domain.request.LoginVo;
 import com.cjw.smarthomesync.auth.domain.response.JwtTokenVo;
 import com.cjw.smarthomesync.auth.mapper.AuthMapper;
@@ -28,28 +29,28 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void signup(AuthDto authDto) {
-        if (authMapper.findAccountByEmail(authDto.getEmail()).isPresent())
+    public void signup(SignupVo signupVo) {
+        if (authMapper.findAccountByEmail(signupVo.getEmail()).isPresent())
             // 이미 존재 하는 이메일
             throw new BaseException(ErrorMessage.EXIST_EMAIL);
 
         // 비밀 번호 암호화
-        authDto.setPassword(passwordEncoder.encode(authDto.getPassword()));
+        signupVo.setPassword(passwordEncoder.encode(signupVo.getPassword()));
 
         // 회원 정보 DB 등록
-        authMapper.signup(authDto);
+        authMapper.signup(signupVo);
 
         // salt 값 설정을 위한 현재 서버 시간 파라미터 생성
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         // salt 생성
-        String salt = authDto.getUid().toString() + calendar.getTime();
+        String salt = signupVo.getUid().toString() + calendar.getTime();
 
         // 암호화 진행
         salt = (BCrypt.hashpw(salt, BCrypt.gensalt()));
 
         // salt 값 DB 반영
-        authMapper.setSalt(authDto.getUid(), salt);
+        authMapper.setSalt(signupVo.getUid(), salt);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public JwtTokenVo login(LoginVo loginVo) {
         // 로그인 정보로 부터 DB 에서 계정 정보를 로딩
-        AuthDto account = authMapper.findAccountByEmail(loginVo.getEmail())
+        AuthEntity account = authMapper.findAccountByEmail(loginVo.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorMessage.EXIST_EMAIL));
 
         // 비밀 번호가 맞지 않으면
@@ -91,12 +92,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String refreshToken(Long uid, String token) {
-        Optional<AuthDto> object = authMapper.findAccountByUid(uid);
+        Optional<AuthEntity> object = authMapper.findAccountByUid(uid);
         if (object.isPresent()) {
-            AuthDto authDto = object.get();
-            if (token.equals(authDto.getRefreshToken())) {
+            AuthEntity authEntity = object.get();
+            if (token.equals(authEntity.getRefreshToken())) {
                 if (jwtTokenProvider.validateToken(token))
-                    return jwtTokenProvider.createToken(authDto.getUid(), Collections.singletonList(authDto.getRole()));
+                    return jwtTokenProvider.createToken(authEntity.getUid(), Collections.singletonList(authEntity.getRole()));
                 else
                     throw new BaseException(ErrorMessage.ACCESS_TOKEN_EXPIRE);
             } else {

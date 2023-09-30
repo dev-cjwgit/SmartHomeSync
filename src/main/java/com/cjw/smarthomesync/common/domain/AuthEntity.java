@@ -1,5 +1,9 @@
-package com.cjw.smarthomesync.auth.domain.request;
+package com.cjw.smarthomesync.common.domain;
 
+import com.cjw.smarthomesync.common.annotation.ValidationGroups;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,11 +12,19 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Data
-public class AuthDto implements UserDetails {
+public class AuthEntity implements UserDetails {
     private Long uid;
+
     private String email;
+
     private String password;
+
     private String name;
+
+    private String nickname;
+
+    private String phoneNumber;
+
     private String refreshToken;
     private String salt;
     private Timestamp createdAt;
