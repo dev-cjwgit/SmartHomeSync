@@ -45,9 +45,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<ResponseDto<JwtTokenVo>> refreshToken(@RequestBody Long uid, HttpServletRequest request, @RequestParam String refreshToken) {
-//        String token = request.getHeader("refresh-token");
-        String token = refreshToken;
+    public ResponseEntity<ResponseDto<JwtTokenVo>> refreshToken(@RequestBody Long uid, HttpServletRequest request) {
+        String token = request.getHeader("refresh-token");
         String result = authService.refreshToken(uid, token);
 
         if (result != null && !result.isEmpty()) {
@@ -59,7 +58,7 @@ public class AuthController {
                     .data(
                             Collections.singletonList(
                                     JwtTokenVo.builder()
-                                            .refreshToken(token)
+                                            .accessToken(token)
                                             .build()
                             )
                     )
