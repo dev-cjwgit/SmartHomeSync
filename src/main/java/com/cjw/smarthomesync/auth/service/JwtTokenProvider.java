@@ -6,6 +6,7 @@ import com.cjw.smarthomesync.common.exception.ErrorMessage;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expire)) // 토큰 만료일 설정
-                .signWith(SignatureAlgorithm.HS256, (secretKey + authMapper.getSalt(uid)).getBytes()) // 암호화
+                .signWith(Keys.hmacShaKeyFor((secretKey + authMapper.getSalt(uid)).getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256) // 암호화
                 .compact();
     }
 
@@ -74,8 +75,9 @@ public class JwtTokenProvider {
 
     // 유저 이름 추출
     public String getUserId(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes())
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
