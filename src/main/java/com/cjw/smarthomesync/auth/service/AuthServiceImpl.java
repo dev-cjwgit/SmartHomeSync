@@ -54,6 +54,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
+    public boolean logout(Long uid) {
+        if (authMapper.getRefreshToken(uid).isEmpty())
+            throw new BaseException(ErrorMessage.NOT_LOGIN);
+
+        authMapper.setRefreshToken(uid, "");
+        return true;
+    }
+
+    @Override
+    @Transactional
     public JwtTokenVo login(LoginVo loginVo) {
         // 로그인 정보로 부터 DB 에서 계정 정보를 로딩
         AuthDto account = authMapper.findAccountByEmail(loginVo.getEmail())
@@ -70,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
         account.setRefreshToken(refreshToken);
 
         // 서버에 리프레시 토큰만 저장
-        authMapper.setRefreshToken(account);
+        authMapper.setRefreshToken(account.getUid(), refreshToken);
 
         // 데이터 반환
         return JwtTokenVo.builder()

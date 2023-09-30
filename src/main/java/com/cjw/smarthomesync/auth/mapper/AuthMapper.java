@@ -16,7 +16,9 @@ public interface AuthMapper {
 
     String getSalt(Long uid);
 
-    void setRefreshToken(AuthDto authDto);
+    void setRefreshToken(@Param("uid") Long uid, @Param("refresh_token") String refreshToken);
+
+    String getRefreshToken(@Param("uid") Long uid);
 
     void signup(AuthDto authDto);
 }

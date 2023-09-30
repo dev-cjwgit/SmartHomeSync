@@ -44,9 +44,15 @@
         WHERE uid = #{uid};
     </select>
 
+    <select id="getRefreshToken" parameterType="long" resultType="string">
+        SELECT `refresh_token`
+        FROM account
+        WHERE uid = #{uid};
+    </select>
+
     <update id="setRefreshToken" parameterType="AuthDto">
         UPDATE account
-        SET `refresh_token` = #{refreshToken}
+        SET `refresh_token` = #{refresh_token}
         WHERE `uid` = #{uid};
     </update>
 </mapper>

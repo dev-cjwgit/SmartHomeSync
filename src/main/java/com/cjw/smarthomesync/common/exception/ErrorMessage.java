@@ -27,6 +27,8 @@ public enum ErrorMessage {
     NOT_EXIST_EMAIL(2001, "이미 존재 하지 않는 이메일입니다.", HttpStatus.BAD_REQUEST),
     NOT_MATCH_PASSWORD(2002, "비밀번호가 틀렸습니다.", HttpStatus.BAD_REQUEST),
 
+    NOT_LOGIN(2003, "로그인이 되어 있지 않습니다.", HttpStatus.BAD_REQUEST),
+
 
     UNDEFINED_EXCEPTION(0, "정의 되지 않은 오류 입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 

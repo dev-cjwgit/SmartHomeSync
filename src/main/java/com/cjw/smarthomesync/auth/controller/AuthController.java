@@ -9,6 +9,7 @@ import com.cjw.smarthomesync.common.exception.BaseException;
 import com.cjw.smarthomesync.common.exception.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,18 @@ public class AuthController {
                 .message("회원 가입 완료")
                 .size(1)
                 .data(Collections.singletonList(jwtTokenVo))
+                .build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto<?>> logout(final Authentication authentication) {
+        AuthDto authDto = (AuthDto) authentication.getPrincipal();
+        boolean result = authService.logout(authDto.getUid());
+        return ResponseEntity.ok(ResponseDto.<String>builder()
+                .result(result)
+                .message(result ? "로그아웃 성공" : "로그아웃 실패")
+                .size(0)
+                .data(Collections.emptyList())
                 .build());
     }
 
