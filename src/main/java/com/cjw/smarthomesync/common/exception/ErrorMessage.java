@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorMessage {
+    EXTERNAL_5XX_SMART_THINGS_EXCEPTION(-3, "SmartThings 연결에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    EXTERNAL_4XX_SMART_THINGS_EXCEPTION(-2, "SmartThings 연결에 실패하였습니다.", HttpStatus.BAD_REQUEST),
+
     VALIDATION_FAIL_EXCEPTION(-1, "입력 값의 조건이 잘못 되었습니다.", HttpStatus.BAD_REQUEST),
 
     ACCESS_TOKEN_EXPIRE(1000, "토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
