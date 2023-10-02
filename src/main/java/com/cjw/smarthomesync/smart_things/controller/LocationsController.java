@@ -18,7 +18,7 @@ public class LocationsController {
     private final LocationsService locationsService;
 
     @GetMapping()
-    public ResponseEntity<ResponseDto<Map<?, ?>>> getLoactionsData() {
+    public ResponseEntity<ResponseDto<Map<?, ?>>> getLocationsData() {
         Map<?, ?> result = locationsService.getLocationsData();
 
         return ResponseEntity.ok(ResponseDto.<Map<?, ?>>builder()
