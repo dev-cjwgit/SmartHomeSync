@@ -2,6 +2,8 @@ package com.cjw.smarthomesync.auth.service;
 
 import com.cjw.smarthomesync.common.domain.AuthEntity;
 import com.cjw.smarthomesync.auth.mapper.AuthMapper;
+import com.cjw.smarthomesync.common.exception.BaseException;
+import com.cjw.smarthomesync.common.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         return authMapper.findAccountByUid(Long.valueOf(userId))
                 .map(this::addAuthorities)
-                .orElseThrow(() -> new RuntimeException(userId + "> 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorMessage.NOT_USER_INFO));
     }
 
     private AuthEntity addAuthorities(AuthEntity userDto) {

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Mapper
 public interface AuthMapper {
+    // Spring Security Context에 담을 데이터
     Optional<AuthEntity> findAccountByUid(Long uid);
 
     Optional<AuthEntity> findAccountByEmail(String email);

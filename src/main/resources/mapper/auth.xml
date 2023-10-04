@@ -16,7 +16,10 @@
         SELECT `uid`,
                `email`,
                `name`,
+               `nickname`,
+               `phone_number` as phoneNumber,
                `refresh_token` as refreshToken,
+               `created_at` as createdAt,
                `role`
         FROM account
         WHERE `uid` = #{uid}
