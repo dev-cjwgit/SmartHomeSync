@@ -1,7 +1,6 @@
 package com.cjw.smarthomesync.common.config.security;
 
 import com.cjw.smarthomesync.auth.service.JwtTokenProvider;
-import com.cjw.smarthomesync.common.exception.BaseException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -25,16 +24,13 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         String requestURI = ((HttpServletRequest) request).getRequestURI();
-        try {
-            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
-            } else {
-                log.debug("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
-            }
-        } catch (BaseException e) {
-            log.info(e.getErrorMessage().toString());
+
+        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
+        } else {
+            log.info("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
         }
 
         chain.doFilter(request, response);

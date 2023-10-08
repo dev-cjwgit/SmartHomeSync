@@ -8,6 +8,7 @@ import com.cjw.smarthomesync.auth.mapper.AuthMapper;
 import com.cjw.smarthomesync.common.exception.BaseException;
 import com.cjw.smarthomesync.common.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private final AuthMapper authMapper;
 
@@ -30,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void signup(SignupVo signupVo) {
+        log.info("회원 가입 서비스 수행");
         if (authMapper.findAccountByEmail(signupVo.getEmail()).isPresent())
             // 이미 존재 하는 이메일
             throw new BaseException(ErrorMessage.EXIST_EMAIL);
@@ -56,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public boolean logout(Long uid) {
+        log.info("로그아웃 서비스 수행");
         if (authMapper.getRefreshToken(uid).isEmpty())
             throw new BaseException(ErrorMessage.NOT_LOGIN);
 
@@ -66,6 +70,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public JwtTokenVo login(LoginVo loginVo) {
+        log.info("로그인 서비스 수행");
         // 로그인 정보로 부터 DB 에서 계정 정보를 로딩
         AuthEntity account = authMapper.findAccountByEmail(loginVo.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorMessage.EXIST_EMAIL));
@@ -92,6 +97,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String refreshToken(Long uid, String token) {
+        log.info("토근 재발근 서비스 수행");
         Optional<AuthEntity> object = authMapper.findAccountByUid(uid);
         if (object.isPresent()) {
             AuthEntity authEntity = object.get();

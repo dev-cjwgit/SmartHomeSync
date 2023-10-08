@@ -57,17 +57,18 @@ public class JwtTokenProvider {
 
     // JWT 토큰 생성
     public String createToken(Long uid, List<String> roles) {
-//        return create(uid, roles, 1000 * 5);
+        log.info("Jwt 토큰 생성");
         return create(uid, roles, 1000 * 10 * tokenValidMinutes);
     }
 
     public String createRefresh(Long uid, List<String> roles) {
-//        return create(uid, roles, 1000 * 10 * 60);
+        log.info("리프레시 토큰 생성");
         return create(uid, roles, 1000 * 10 * refreshValidMinutes);
     }
 
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
+        log.info("유저 인증 정보 로드 및 반환");
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
@@ -75,6 +76,7 @@ public class JwtTokenProvider {
 
     // 유저 이름 추출
     public String getUserId(String token) {
+        log.info("token으로 부터 인증된 uid 가져오기");
         return Jwts.parserBuilder()
                 .setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes())
                 .build()
@@ -85,6 +87,7 @@ public class JwtTokenProvider {
 
     // Request header에서 token 꺼내옴
     public String resolveToken(HttpServletRequest request) {
+        log.info("Authorization Header로 부터 토큰 가져오기");
         String token = request.getHeader("Authorization");
 
         // 가져온 Authorization Header 가 문자열이고, Bearer 로 시작해야 가져옴
@@ -97,6 +100,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰 유효성 체크
     public boolean validateToken(String token) {
+        log.info("토큰 유효성 검사");
         try {
             Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey((secretKey + authMapper.getSalt(getUid(token))).getBytes(StandardCharsets.UTF_8))
@@ -112,6 +116,7 @@ public class JwtTokenProvider {
     }
 
     private Long getUid(String token) {
+        log.info("token으로 부터 인증이 안된 uid 가져오기");
         try {
             if (token.chars().filter(c -> c == '.').count() != 2)
                 throw new BaseException(ErrorMessage.ACCESS_TOKEN_INVALID);

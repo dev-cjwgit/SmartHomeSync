@@ -51,3 +51,7 @@ springdoc:
 # SmartThings Setting
 smart-things:
   auth-token: d862d51f-ae98-4d03-86ec-3163c6ae5a67
+
+logging:
+  level:
+    root: info

@@ -11,6 +11,7 @@ import com.cjw.smarthomesync.common.exception.BaseException;
 import com.cjw.smarthomesync.common.exception.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -24,11 +25,13 @@ import java.util.Collections;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto<AuthEntity>> signup(@RequestBody @Validated(ValidationGroups.signup.class) SignupVo signupVo) {
+        log.info("회원 가입 기능 수행");
         authService.signup(signupVo);
 
         return ResponseEntity.ok(ResponseDto.<AuthEntity>builder()
@@ -41,6 +44,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<JwtTokenVo>> login(@RequestBody @Validated(ValidationGroups.login.class) LoginVo loginVo) {
+        log.info("로그인 기능 수행");
         JwtTokenVo jwtTokenVo = authService.login(loginVo);
 
         return ResponseEntity.ok(ResponseDto.<JwtTokenVo>builder()
@@ -53,6 +57,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<ResponseDto<?>> logout(final Authentication authentication) {
+        log.info("로그아웃 기능 수행");
         AuthEntity authEntity = (AuthEntity) authentication.getPrincipal();
         boolean result = authService.logout(authEntity.getUid());
         return ResponseEntity.ok(ResponseDto.<String>builder()
@@ -65,6 +70,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<ResponseDto<JwtTokenVo>> refreshToken(@RequestBody Long uid, HttpServletRequest request) {
+        log.info("리프레시 토큰 재발긍 수행");
         String token = request.getHeader("refresh-token");
         String result = authService.refreshToken(uid, token);
 
