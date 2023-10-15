@@ -14,7 +14,8 @@ spring:
       max-lifetime: 1800000
       auto-commit: true
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/smart_home_sync?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/smart_home_sync?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+
     username: root
     password: ss1235789
     type: org.apache.commons.dbcp2.BasicDataSource
